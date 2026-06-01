@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>multisaver.online | Video & HD Image Downloader</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .ad-zone { background: #f8fafc; border: 2px dashed #cbd5e1; display: flex; align-items: center; justify-content: center; text-align: center; color: #94a3b8; font-size: 0.85rem; }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans text-slate-800 min-h-screen flex flex-col justify-between">
+
+    <div id="topAd" class="ad-zone h-20 w-full border-b border-slate-200">[Google AdSense Space - Top Banner]</div>
+
+    <nav class="bg-white shadow-sm border-b border-slate-100 py-4 px-6">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2 font-bold text-xl text-indigo-600 tracking-tight">
+                <i class="fa-solid fa-cloud-arrow-down text-2xl"></i> multisaver.online
+            </div>
+            <div class="flex items-center gap-3">
+                <span id="tierBadge" class="hidden bg-amber-100 text-amber-800 font-bold px-3 py-1 rounded-full text-xs uppercase">👑 Premium VIP</span>
+                <button id="authBtn" onclick="openAuthModal()" class="text-sm font-semibold bg-indigo-50 border border-indigo-200 text-indigo-600 px-4 py-2 rounded-xl hover:bg-indigo-100 transition">Sign In</button>
+                <button id="pricingBtn" onclick="openPricingModal()" class="text-sm font-semibold bg-emerald-600 text-white px-4 py-2 rounded-xl hover:bg-emerald-700 transition shadow-sm">Go Premium</button>
+                <button id="logoutBtn" onclick="handleLogout()" class="hidden text-sm font-semibold text-red-500 hover:underline">Log Out</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex-grow max-w-7xl w-full mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-5 gap-6">
+        
+        <div id="leftAd" class="ad-zone hidden lg:flex rounded-2xl p-4">[AdSense Vertical Sidebar Left]</div>
+
+        <div class="lg:col-span-3 flex flex-col items-center justify-center">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 mb-2">All-In-One Saver</h1>
+                <p class="text-slate-500 text-sm sm:text-base">Download high-speed Videos or original HD Images seamlessly.</p>
+            </div>
+
+            <div class="w-full bg-white rounded-2xl shadow-xl border border-slate-100 p-6 sm:p-8">
+                <form id="downloadForm" class="space-y-4">
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <div class="relative flex-grow">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400"><i class="fa-solid fa-link"></i></div>
+                            <input type="url" id="videoUrl" required placeholder="Paste post image link or video link here..." class="w-full pl-11 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition text-base">
+                        </div>
+                        
+                        <div class="relative shrink-0 min-w-[140px]">
+                            <select id="mediaQuality" class="w-full h-full px-4 py-4 sm:py-0 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-sm text-slate-700 appearance-none cursor-pointer">
+                                <option value="high" selected>⭐ HD / 4K</option>
+                                <option value="medium">720p Quality</option>
+                                <option value="low">480p Quality</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500"><i class="fa-solid fa-chevron-down text-xs"></i></div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl transition shadow-lg flex items-center justify-center gap-2 text-base">
+                        <span>Fetch Content Asset</span> <i class="fa-solid fa-circle-arrow-down"></i>
+                    </button>
+                </form>
+
+                <div id="loadingState" class="hidden mt-8 flex flex-col items-center gap-3">
+                    <div class="w-10 h-10 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+                    <p class="text-sm font-medium text-slate-500">Extracting content streams... please wait.</p>
+                </div>
+
+                <div id="resultCard" class="hidden mt-8 p-4 bg-slate-50 rounded-xl border border-slate-200 flex flex-col md:flex-row gap-4 items-center">
+                    <div class="relative w-full md:w-40 h-24 shrink-0">
+                        <img id="videoThumbnail" src="" alt="Thumbnail" class="w-full h-full object-cover rounded-lg bg-slate-200 shadow-sm">
+                        <span id="assetTypeBadge" class="absolute bottom-1 left-1 text-[9px] font-black tracking-widest text-white px-2 py-0.5 rounded uppercase shadow bg-indigo-600">VIDEO</span>
+                    </div>
+                    <div class="flex-grow text-center md:text-left">
+                        <h3 id="videoTitle" class="font-bold text-slate-800 text-base line-clamp-2 mb-3">Media Title Output</h3>
+                        <a id="actualDownloadBtn" href="#" download target="_blank" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded-lg transition text-sm shadow-sm">
+                            <i class="fa-solid fa-download"></i> Save HD File Now
+                        </a>
+                    </div>
+                </div>
+
+                <div id="errorMessage" class="hidden mt-6 p-4 bg-red-50 border border-red-200 text-red-600 rounded-xl text-sm font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-circle-exclamation"></i> <span id="errorText">Error text placeholder.</span>
+                </div>
+            </div>
+
+            <div id="bottomAd" class="ad-zone h-24 w-full rounded-2xl mt-6">[AdSense Bottom Container Row Placement]</div>
+        </div>
+
+        <div id="rightAd" class="ad-zone hidden lg:flex rounded-2xl p-4">[AdSense Vertical Sidebar Right]</div>
+    </div>
+
+    <div id="pricingModal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-3xl shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closePricingModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <div class="text-center mb-6">
+                <span id="qualityAlertNotice" class="hidden bg-amber-50 border border-amber-200 text-amber-800 font-semibold px-4 py-1.5 rounded-full text-xs inline-block mb-3">⚡ Max HD/4K downloads require a Premium Membership Tier</span>
+                <h2 class="text-2xl font-black text-slate-900">Upgrade to Pro Membership</h2>
+                <p class="text-slate-500 text-sm">Download unlimited ultra HD files with zero banner advertisement interference.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="border border-slate-200 rounded-2xl p-5 text-center flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-slate-700 text-sm uppercase">1 Month</h3>
+                        <div class="text-2xl font-black my-2">$4.99</div>
+                        <p class="text-xs text-slate-400">Perfect for quick high-speed file backups.</p>
+                    </div>
+                    <button class="mt-4 w-full py-2 bg-slate-900 text-white rounded-xl text-sm font-bold">Select</button>
+                </div>
+                <div class="border-2 border-indigo-500 relative bg-indigo-50/30 rounded-2xl p-5 text-center flex flex-col justify-between">
+                    <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full">Popular Choice</span>
+                    <div>
+                        <h3 class="font-bold text-indigo-900 text-sm uppercase">6 Months</h3>
+                        <div class="text-2xl font-black my-2">$19.99</div>
+                        <p class="text-xs text-slate-400">Save 33% on standard usage fees.</p>
+                    </div>
+                    <button class="mt-4 w-full py-2 bg-indigo-600 text-white rounded-xl text-sm font-bold">Select</button>
+                </div>
+                <div class="border border-slate-200 rounded-2xl p-5 text-center flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-slate-700 text-sm uppercase">1 Year</h3>
+                        <div class="text-2xl font-black my-2">$29.99</div>
+                        <p class="text-xs text-slate-400">Ultimate long term backup storage protection plan.</p>
+                    </div>
+                    <button class="mt-4 w-full py-2 bg-slate-900 text-white rounded-xl text-sm font-bold">Select</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="authModal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl relative">
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h2 class="text-xl font-bold mb-4">Account Access</h2>
+            <div class="space-y-3">
+                <input type="email" id="authEmail" placeholder="Your Email" class="w-full p-3 border rounded-xl outline-none focus:border-indigo-500">
+                <input type="password" id="authPassword" placeholder="Your Password" class="w-full p-3 border rounded-xl outline-none focus:border-indigo-500">
+                <button onclick="submitAuth('login')" class="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition">Log In</button>
+                <button onclick="submitAuth('register')" class="w-full py-3 bg-slate-100 text-slate-700 rounded-xl text-xs hover:bg-slate-200 transition">Create Free Account</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-white border-t border-slate-100 py-6 text-center text-sm text-slate-400">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div>&copy; 2026 multisaver.online. For personal backup use only.</div>
+            <div class="flex gap-4"><a href="#" class="hover:underline">Privacy Policy</a><a href="#" class="hover:underline">Terms of Service</a><a href="#" class="hover:underline">Contact Us</a></div>
+        </div>
+    </footer>
+
+    <script>
+        const API_BASE = "http://localhost:5000";
+        let userToken = localStorage.getItem('token') || null;
+        let userTier = localStorage.getItem('tier') || 'free';
+
+        function checkState() {
+            const adBlocks = [document.getElementById('topAd'), document.getElementById('leftAd'), document.getElementById('rightAd'), document.getElementById('bottomAd')];
+            if (userToken && userTier === 'premium') {
+                document.getElementById('tierBadge').classList.remove('hidden');
+                document.getElementById('authBtn').classList.add('hidden');
+                document.getElementById('pricingBtn').classList.add('hidden');
+                document.getElementById('logoutBtn').classList.remove('hidden');
+                adBlocks.forEach(b => b ? b.style.display = 'none' : null);
+            } else {
+                document.getElementById('tierBadge').classList.add('hidden');
+                document.getElementById('authBtn').classList.remove('hidden');
+                document.getElementById('pricingBtn').classList.remove('hidden');
+                document.getElementById('logoutBtn').classList.add('hidden');
+                adBlocks.forEach(b => b ? b.style.display = 'flex' : null);
+            }
+        }
+
+        function openAuthModal() { document.getElementById('authModal').classList.remove('hidden'); }
+        function closeAuthModal() { document.getElementById('authModal').classList.add('hidden'); }
+        function openPricingModal(showAlert = false) { 
+            const notice = document.getElementById('qualityAlertNotice');
+            showAlert ? notice.classList.remove('hidden') : notice.classList.add('hidden');
+            document.getElementById('pricingModal').classList.remove('hidden'); 
+        }
+        function closePricingModal() { document.getElementById('pricingModal').classList.add('hidden'); }
+
+        async function submitAuth(type) {
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+            const endpoint = type === 'login' ? '/api/login' : '/api/register';
+            try {
+                const res = await fetch(`${API_BASE}${endpoint}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    if (type === 'login') {
+                        localStorage.setItem('token', data.token);
+                        localStorage.setItem('tier', data.tier);
+                        userToken = data.token; userTier = data.tier;
+                        closeAuthModal(); checkState();
+                    } else { alert("Account created! You can sign in now."); }
+                } else { alert(data.error); }
+            } catch { alert("Network auth connection failure."); }
+        }
+
+        function handleLogout() { localStorage.clear(); location.reload(); }
+
+        // PIPELINE EVENT MONITOR
+        document.getElementById('downloadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const urlInput = document.getElementById('videoUrl').value;
+            const selectedQuality = document.getElementById('mediaQuality').value;
+
+            if (userTier === 'free' && selectedQuality === 'high') {
+                openPricingModal(true);
+                return;
+            }
+
+            document.getElementById('resultCard').classList.add('hidden');
+            document.getElementById('errorMessage').classList.add('hidden');
+            document.getElementById('loadingState').classList.remove('hidden');
+
+            try {
+                const response = await fetch(`${API_BASE}/get-download-link`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url: urlInput, token: userToken, quality: selectedQuality })
+                });
+                const data = await response.json();
+                document.getElementById('loadingState').classList.add('hidden');
+
+                if (data.success) {
+                    document.getElementById('videoTitle').innerText = data.title;
+                    document.getElementById('videoThumbnail').src = data.thumbnail || "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=400";
+                    document.getElementById('actualDownloadBtn').href = data.download_url;
+                    
+                    const badge = document.getElementById('assetTypeBadge');
+                    if (data.type === 'image') {
+                        badge.innerText = "HD IMAGE";
+                        badge.className = "absolute bottom-1 left-1 text-[9px] font-black tracking-widest text-white px-2 py-0.5 rounded uppercase shadow bg-emerald-600";
+                    } else {
+                        badge.innerText = "VIDEO";
+                        badge.className = "absolute bottom-1 left-1 text-[9px] font-black tracking-widest text-white px-2 py-0.5 rounded uppercase shadow bg-indigo-600";
+                    }
+
+                    document.getElementById('resultCard').classList.remove('hidden');
+                } else {
+                    document.getElementById('errorText').innerText = data.error;
+                    document.getElementById('errorMessage').classList.remove('hidden');
+                }
+            } catch {
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('errorText').innerText = "Unable to connect to your Python app.py server. Is it running in your terminal window?";
+                document.getElementById('errorMessage').classList.remove('hidden');
+            }
+        });
+
+        checkState();
+    </script>
+</body>
+</html>
